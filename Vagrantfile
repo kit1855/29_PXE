@@ -3,7 +3,6 @@ Vagrant.configure("2") do |config|
   # Настройка PXE-сервера
   config.vm.define "pxeserver" do |server|
     server.vm.box = "ubuntu/jammy64"
-    # server.vm.box_url = "https://vagrant.elab.pro/bento/ubuntu-22.04.box"  # Закомментировано, т.к. бокс уже добавлен локально
     server.vm.host_name = "pxeserver"
     
     # Проброс порта для веб-сервера
@@ -25,18 +24,18 @@ Vagrant.configure("2") do |config|
       vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     end
     
-    server.vm.provision "ansible" do |ansible|
-      ansible.playbook = "ansible/provision.yml"
-      ansible.inventory_path = "ansible/hosts"
-      ansible.host_key_checking = "false"
-      ansible.limit = "all"
-    end
+    # Ansible ПРОВИЖИНИНГ ОТКЛЮЧЁН (закомментирован)
+    # server.vm.provision "ansible" do |ansible|
+    #   ansible.playbook = "ansible/provision.yml"
+    #   ansible.inventory_path = "ansible/hosts"
+    #   ansible.host_key_checking = "false"
+    #   ansible.limit = "all"
+    # end
   end
 
   # Настройка PXE-клиента
   config.vm.define "pxeclient" do |client|
     client.vm.box = "ubuntu/jammy64"
-    # client.vm.box_url = "https://vagrant.elab.pro/bento/ubuntu-22.04.box"  # Закомментировано, т.к. бокс уже добавлен локально
     client.vm.host_name = "pxeclient"
     
     # Подключение к внутренней сети PXE
