@@ -2,8 +2,8 @@ Vagrant.configure("2") do |config|
   
   # Настройка PXE-сервера
   config.vm.define "pxeserver" do |server|
-    server.vm.box = "bento/ubuntu-22.04"
-    server.vm.box_url = "https://vagrant.elab.pro/bento/ubuntu-22.04.box"
+    server.vm.box = "ubuntu/jammy64"
+    # server.vm.box_url = "https://vagrant.elab.pro/bento/ubuntu-22.04.box"  # Закомментировано, т.к. бокс уже добавлен локально
     server.vm.host_name = "pxeserver"
     
     # Проброс порта для веб-сервера
@@ -35,8 +35,8 @@ Vagrant.configure("2") do |config|
 
   # Настройка PXE-клиента
   config.vm.define "pxeclient" do |client|
-    client.vm.box = "bento/ubuntu-22.04"
-    client.vm.box_url = "https://vagrant.elab.pro/bento/ubuntu-22.04.box"
+    client.vm.box = "ubuntu/jammy64"
+    # client.vm.box_url = "https://vagrant.elab.pro/bento/ubuntu-22.04.box"  # Закомментировано, т.к. бокс уже добавлен локально
     client.vm.host_name = "pxeclient"
     
     # Подключение к внутренней сети PXE
