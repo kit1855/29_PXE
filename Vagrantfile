@@ -1,3 +1,5 @@
+ENV['VAGRANT_SERVER_URL'] = 'https://vagrant.elab.pro'
+
 Vagrant.configure("2") do |config|
   
   # Настройка PXE-сервера
@@ -13,7 +15,7 @@ Vagrant.configure("2") do |config|
       ip: "10.0.0.20", 
       virtualbox__intnet: "pxenet"
     
-    # Дополнительная сеть для доступа в интернет
+    # Дополнительная сеть для доступа в интернет (адаптер 3)
     server.vm.network "private_network", 
       ip: "192.168.50.10", 
       adapter: 3
@@ -40,7 +42,7 @@ Vagrant.configure("2") do |config|
       vb.cpus = 2
       
       # НЕ ТРОГАЕМ первый интерфейс (NAT для SSH)!
-      # А второй интерфейс настраиваем на внутреннюю сеть pxenet
+      # Второй интерфейс настраиваем на внутреннюю сеть pxenet
       vb.customize ["modifyvm", :id, "--nic2", "intnet"]
       vb.customize ["modifyvm", :id, "--intnet2", "pxenet"]
       
