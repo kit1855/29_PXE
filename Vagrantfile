@@ -23,14 +23,6 @@ Vagrant.configure("2") do |config|
       vb.cpus = 2
       vb.customize ["modifyvm", :id, "--natdnshostresolver1", "on"]
     end
-    
-    # Ansible ПРОВИЖИНИНГ ОТКЛЮЧЁН (закомментирован)
-    # server.vm.provision "ansible" do |ansible|
-    #   ansible.playbook = "ansible/provision.yml"
-    #   ansible.inventory_path = "ansible/hosts"
-    #   ansible.host_key_checking = "false"
-    #   ansible.limit = "all"
-    # end
   end
 
   # Настройка PXE-клиента
@@ -47,12 +39,13 @@ Vagrant.configure("2") do |config|
       vb.memory = "4096"
       vb.cpus = 2
       
-      # Первый интерфейс — внутренняя сеть pxenet (для PXE)
-      vb.customize ["modifyvm", :id, "--nic1", "intnet"]
-      vb.customize ["modifyvm", :id, "--intnet1", "pxenet"]
+      # НЕ ТРОГАЕМ первый интерфейс (NAT для SSH)!
+      # А второй интерфейс настраиваем на внутреннюю сеть pxenet
+      vb.customize ["modifyvm", :id, "--nic2", "intnet"]
+      vb.customize ["modifyvm", :id, "--intnet2", "pxenet"]
       
-      # Второй интерфейс — NAT (для доступа в интернет после установки)
-      vb.customize ["modifyvm", :id, "--nic2", "nat"]
+      # Третий интерфейс — NAT (для доступа в интернет после установки)
+      vb.customize ["modifyvm", :id, "--nic3", "nat"]
       
       # Отключаем звук
       vb.customize ["modifyvm", :id, "--audio", "none"]
