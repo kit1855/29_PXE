@@ -3,7 +3,7 @@ ENV['VAGRANT_SERVER_URL'] = 'https://vagrant.elab.pro'
 Vagrant.configure("2") do |config|
   
   config.vm.define "pxeser" do |server|
-    server.vm.box = 'bento/ubuntu-22.04'
+    server.vm.box = 'ubuntu/jammy64'
     server.vm.host_name = 'pxeser'
     server.vm.network "forwarded_port", guest: 80, host: 8080
     server.vm.network :private_network,
@@ -22,7 +22,7 @@ Vagrant.configure("2") do |config|
   # end
   end
   config.vm.define "pxecli" do |pxeclient|
-    pxeclient.vm.box = 'bento/ubuntu-22.04'
+    pxeclient.vm.box = 'ubuntu/jammy64'
     #pxeclient.vm.box = 'seskion/ubuntu-20.04-efi'
     pxeclient.vm.host_name = 'pxecli'
     pxeclient.vm.network :private_network, 
