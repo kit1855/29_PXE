@@ -1,43 +1,30 @@
-# Указываем зеркало для скачивания боксов
-ENV['VAGRANT_SERVER_URL'] = 'https://vagrant.elab.pro'
-
 Vagrant.configure("2") do |config|
   
   config.vm.define "pxeser" do |server|
     server.vm.box = 'bento/ubuntu-22.04'
-    # Явно указываем URL бокса на зеркале
-    server.vm.box_url = 'https://vagrant.elab.pro/bento/ubuntu-22.04.box'
     server.vm.host_name = 'pxeser'
-    
     server.vm.network "forwarded_port", guest: 80, host: 8080
     server.vm.network :private_network,
                        ip: "10.0.0.20",
                        virtualbox__intnet: 'pxenet'
     server.vm.network :private_network, ip: "192.168.56.10", adapter: 3
-    
     server.vm.provider "virtualbox" do |vb|
       vb.memory = "1024"
       vb.customize ["modifyvm", :id,"--natdnshostresolver1", "on"]
     end
-    
-    # Ansible отключён (закомментирован)
-    # server.vm.provision "ansible" do |ansible|
-    #   ansible.playbook = "ansible/provision.yml"
-    #   ansible.inventory_path = "ansible/hosts"
-    #   ansible.host_key_checking = "false"
-    #   ansible.limit = "all"
-    # end
+  # server.vm.provision "ansible" do |ansible|
+  # ansible.playbook = "ansible/provision.yml"
+  # ansible.inventory_path = "ansible/hosts"
+  # ansible.host_key_checking = "false"
+  # ansible.limit = "all"
+  # end
   end
-  
   config.vm.define "pxecli" do |pxeclient|
     pxeclient.vm.box = 'bento/ubuntu-22.04'
-    # Явно указываем URL бокса на зеркале
-    pxeclient.vm.box_url = 'https://vagrant.elab.pro/bento/ubuntu-22.04.box'
+    #pxeclient.vm.box = 'seskion/ubuntu-20.04-efi'
     pxeclient.vm.host_name = 'pxecli'
-    
     pxeclient.vm.network :private_network, 
                           ip: "192.168.56.20"
-    
     pxeclient.vm.provider :virtualbox do |vb|
       vb.memory = "4096"
       vb.customize ["modifyvm", :id,"--natdnshostresolver1", "on"]
@@ -54,5 +41,4 @@ Vagrant.configure("2") do |config|
       vb.customize ["modifyvm", :id,"--natdnshostresolver1", "on"]
     end
   end
-  
 end
