@@ -40,16 +40,12 @@ Vagrant.configure("2") do |config|
     pxeclient.vm.provider :virtualbox do |vb|
       vb.memory = "4096"
       vb.customize ["modifyvm", :id,"--natdnshostresolver1", "on"]
-      vb.customize [
-          'modifyvm', :id,
-          '--nic1', 'intnet',
-          '--intnet1', 'pxenet',
-          '--nic2', 'nat',
-          '--boot1', 'net',
-          '--boot2', 'none',
-          '--boot3', 'none',
-          '--boot4', 'none'
-        ]
+      # Убираем настройки адаптеров, т.к. Vagrant уже все настроил через vm.network
+      # Оставляем только настройку загрузки с сети
+      vb.customize ["modifyvm", :id, "--boot1", "net"]
+      vb.customize ["modifyvm", :id, "--boot2", "none"]
+      vb.customize ["modifyvm", :id, "--boot3", "none"]
+      vb.customize ["modifyvm", :id, "--boot4", "none"]
       vb.customize ["modifyvm", :id,"--natdnshostresolver1", "on"]
     end
   end
