@@ -4,9 +4,8 @@ ENV['VAGRANT_SERVER_URL'] = 'https://vagrant.elab.pro'
 Vagrant.configure("2") do |config|
   
   config.vm.define "pxeser" do |server|
-    server.vm.box = 'ubuntu/jammy64'      # Меняем на ваш бокс
-    server.vm.box_version = '1.0.0'       # Явно указываем версию 1.0.0
-    # server.vm.box_url = 'https://vagrant.elab.pro/bento/ubuntu-22.04.box'  # Убираем, т.к. бокс уже есть локально
+    server.vm.box = 'ubuntu/jammy64'
+    server.vm.box_version = '1.0.0'
     server.vm.host_name = 'pxeser'
     
     server.vm.network "forwarded_port", guest: 80, host: 8080
@@ -30,13 +29,13 @@ Vagrant.configure("2") do |config|
   end
   
   config.vm.define "pxecli" do |pxeclient|
-    pxeclient.vm.box = 'ubuntu/jammy64'    # Меняем на ваш бокс
-    pxeclient.vm.box_version = '1.0.0'     # Явно указываем версию 1.0.0
-    # server.vm.box_url = 'https://vagrant.elab.pro/bento/ubuntu-22.04.box'  # Убираем
+    pxeclient.vm.box = 'ubuntu/jammy64'
+    pxeclient.vm.box_version = '1.0.0'
     pxeclient.vm.host_name = 'pxecli'
     
     pxeclient.vm.network :private_network, 
-                          ip: "192.168.56.20"
+                          ip: "192.168.56.20",
+                          adapter: 3
     
     pxeclient.vm.provider :virtualbox do |vb|
       vb.memory = "4096"
