@@ -261,7 +261,7 @@ ETag: "213-65c64ce5b4619"
 Accept-Ranges: bytes
 Content-Length: 531
 
-#
+# проверка логов журнала apache2
 vagrant@pxeser:~$ sudo tail -20 /var/log/apache2/other_vhosts_access.log
 pxeser:80 10.0.0.118 - - [26/Sep/2026:16:15:50 +0000] "GET /srv/images/ubuntu-24.04.4-live-server-amd64.iso HTTP/1.1" 200 3405469974 "-" "Wget"
 pxeser:80 10.0.0.118 - - [26/Sep/2026:16:16:44 +0000] "GET /srv/ks/meta-data HTTP/1.1" 200 256 "-" "Cloud-Init/25.2-0ubuntu1~24.04.1"
@@ -279,6 +279,8 @@ pxeser:80 10.0.0.118 - - [26/Sep/2026:16:16:53 +0000] "GET /srv/ks/vendor-data H
 pxeser:80 10.0.0.118 - - [26/Sep/2026:16:16:54 +0000] "GET /srv/ks/vendor-data HTTP/1.1" 404 487 "-" "Cloud-Init/25.2-0ubuntu1~24.04.1"
 pxeser:80 10.0.0.20 - - [26/Sep/2026:16:29:38 +0000] "HEAD /srv/images/ubuntu-24.04.4-live-server-amd64.iso HTTP/1.1" 200 259 "-" "curl/7.81.0"
 pxeser:80 10.0.0.20 - - [26/Sep/2026:16:29:44 +0000] "HEAD /srv/ks/user-data HTTP/1.1" 200 204 "-" "curl/7.81.0"
+
+# проверка что dhcp и tftp работают
 vagrant@pxeser:~$ sudo journalctl -u dnsmasq --since "30 minutes ago"
 Sep 26 16:02:11 pxeser systemd[1]: Starting dnsmasq - A lightweight DHCP an>
 Sep 26 16:02:11 pxeser dnsmasq[4180]: started, version 2.91 DNS disabled
@@ -350,4 +352,3 @@ Sep 26 16:24:07 pxeser dnsmasq-dhcp[4180]: DHCPDISCOVER(enp0s8) 02:44:a4:14>
 Sep 26 16:24:07 pxeser dnsmasq-dhcp[4180]: DHCPOFFER(enp0s8) 10.0.0.110 02:>
 Sep 26 16:24:07 pxeser dnsmasq-dhcp[4180]: DHCPREQUEST(enp0s8) 10.0.0.110 0>
 Sep 26 16:24:07 pxeser dnsmasq-dhcp[4180]: DHCPACK(enp0s8) 10.0.0.110 02:44>
-vagrant@pxeser:~$ exit
