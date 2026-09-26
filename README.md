@@ -14,20 +14,20 @@ vagrant up pxeser
 5. нужно во второй раз отключить ВМ, чтоб зайти в виртуалбоксе в её настройки и отключить сеть, как источник загрузки операционной системы. После этого остаётся единственный источник загрузки операционной системы - диск. Если этого не сделать, пойдёт повторная установка опрерационной системы через PXE.
 
 6. у меня что-то с системой случилось и получил проблему с подключением к ВМ по ssh. Для этого выполнил в обычной командной строке виндовс следующие команды:
-C:\Users\Lenovo>icacls "D:\linux\Professional\29 DHCP, PXE\dz14\.vagrant\machines\pxeser\virtualbox\private_key" /inheritance:r
+```C:\Users\Lenovo>icacls "D:\linux\Professional\29 DHCP, PXE\dz14\.vagrant\machines\pxeser\virtualbox\private_key" /inheritance:r
 обработанный файл: D:\linux\Professional\29 DHCP, PXE\dz14\.vagrant\machines\pxeser\virtualbox\private_key
 Успешно обработано 1 файлов; не удалось обработать 0 файлов
 
 C:\Users\Lenovo>icacls "D:\linux\Professional\29 DHCP, PXE\dz14\.vagrant\machines\pxeser\virtualbox\private_key" /grant:r "%USERNAME%:R"
 обработанный файл: D:\linux\Professional\29 DHCP, PXE\dz14\.vagrant\machines\pxeser\virtualbox\private_key
 Успешно обработано 1 файлов; не удалось обработать 0 файлов
-
+```
 7. после этого подключаюсь к ВМ pxeser, для того чтоб можно было из под неё зайти по ssh на ВМ pxecli и сделать все проверки. Проверки можно было бы сделать прямо в окне этой ВМ самого виртуалбокса, но в нем неудобно команды вводить и после забирать для отчёта текст проверочных команд и их результатов.
 
 8. все проверки:
 
 # подключение из ВМ pxeser по ssh к ВМ pxecli
-
+```
 vagrant@pxeser:~$ ssh otus@10.0.0.110
 The authenticity of host '10.0.0.110 (10.0.0.110)' can't be established.
 ED25519 key fingerprint is SHA256:voM9sjzBLvfKrZ9uNlbBgOsQqhZyCfNaWbV+xHl7QRQ.
@@ -61,8 +61,9 @@ Failed to connect to https://changelogs.ubuntu.com/meta-release-lts. Check your 
 
 To run a command as administrator (user "root"), use "sudo <command>".
 See "man sudo_root" for details.
-
+```
 # проверки ВМ pxecli
+```
 otus@ubuntu-pxe:~$ hostname
 ubuntu-pxe
 otus@ubuntu-pxe:~$ whoami
@@ -127,9 +128,10 @@ otus@ubuntu-pxe:~$
 otus@ubuntu-pxe:~$ exit
 logout
 Connection to 10.0.0.110 closed.
-
+```
 # проверки на VM pxeser
 # статус dnsmasq
+```
 vagrant@pxeser:~$ sudo systemctl status dnsmasq
 ● dnsmasq.service - dnsmasq - A lightweight DHCP and caching DNS server
      Loaded: loaded (/lib/systemd/system/dnsmasq.service; enabled; vendor p>
@@ -154,17 +156,18 @@ Sep 26 16:24:07 pxeser dnsmasq-dhcp[4180]: DHCPDISCOVER(enp0s8) 02:44:a4:14>
 Sep 26 16:24:07 pxeser dnsmasq-dhcp[4180]: DHCPOFFER(enp0s8) 10.0.0.110 02:>
 Sep 26 16:24:07 pxeser dnsmasq-dhcp[4180]: DHCPREQUEST(enp0s8) 10.0.0.110 0>
 Sep 26 16:24:07 pxeser dnsmasq-dhcp[4180]: DHCPACK(enp0s8) 10.0.0.110 02:44>
-
+```
 # порты, которые слушают ndsmasq и tftp
-
+```
 vagrant@pxeser:~$ sudo ss -tunlp | grep -E ":67|:69"
 udp   UNCONN 0      0                         0.0.0.0%enp0s8:67        0.0.0.0:*    users:(("dnsmasq",pid=4180,fd=4))
 udp   UNCONN 0      0                              127.0.0.1:69        0.0.0.0:*    users:(("dnsmasq",pid=4180,fd=7))
 udp   UNCONN 0      0                              10.0.0.20:69        0.0.0.0:*    users:(("dnsmasq",pid=4180,fd=6))
 udp   UNCONN 0      0                                  [::1]:69           [::]:*    users:(("dnsmasq",pid=4180,fd=9))
 udp   UNCONN 0      0      [fe80::a00:27ff:fe7c:4378]%enp0s8:69           [::]:*    users:(("dnsmasq",pid=4180,fd=8))
-
+```
 # статус apache2
+```
 vagrant@pxeser:~$ sudo systemctl status apache2
 ● apache2.service - The Apache HTTP Server
      Loaded: loaded (/lib/systemd/system/apache2.service; enabled; vendor p>
@@ -183,15 +186,17 @@ vagrant@pxeser:~$ sudo systemctl status apache2
 Sep 26 16:02:12 pxeser systemd[1]: Starting The Apache HTTP Server...
 Sep 26 16:02:12 pxeser apachectl[4201]: AH00558: apache2: Could not reliabl>
 Sep 26 16:02:12 pxeser systemd[1]: Started The Apache HTTP Server.
-
+```
 # наличие образа
+```
 vagrant@pxeser:~$ ls -la /srv/images/
 total 3325668
 drwxr-xr-x 2 root root       4096 Sep 26 15:51 .
 drwxr-xr-x 5 root root       4096 Sep 26 16:02 ..
 -rwxr-xr-x 1 root root 3405469696 Sep 26 16:02 ubuntu-24.04.4-live-server-amd64.iso
-
+```
 # нетбут файлы
+```
 vagrant@pxeser:~$ ls -la /srv/tftp/amd64/
 total 89532
 drwxr-xr-x 3 root root     4096 Sep 26 16:02 .
@@ -201,16 +206,18 @@ drwxr-xr-x 3 root root     4096 Sep 26 16:02 ..
 -r--r--r-- 1 root root 15030664 Sep 26 16:02 linux
 -rw-r--r-- 1 root root    42584 Sep 26 16:02 pxelinux.0
 drwxr-xr-x 2 root root     4096 Sep 26 16:02 pxelinux.cfg
-
+```
 # конфиг загрузчика pxelinux
+```
 vagrant@pxeser:~$ cat /srv/tftp/amd64/pxelinux.cfg/default
 DEFAULT install
 LABEL install
     KERNEL linux
     INITRD initrd
     APPEND root=/dev/ram0 ramdisk_size=8388608 ip=dhcp url=http://10.0.0.20/srv/images/ubuntu-24.04.4-live-server-amd64.iso autoinstall cloud-config-url=/dev/null ds=nocloud-net;s=http://10.0.0.20/srv/ks/
-
+```
 # файл автоустановки с логином, паролем, хостнэйм, сетью и ssh
+```
 vagrant@pxeser:~$ cat /srv/ks/user-data
 #cloud-config
 autoinstall:
@@ -237,11 +244,13 @@ autoinstall:
     install-server: true
     allow-pw: true
   updates: security
-
+```
 # проверка наличия обязательного файла для cloud-init. Он пустой, но без него возможны проблемы.
+```
 vagrant@pxeser:~$ cat /srv/ks/meta-data
-
+```
 # проверка, что можно apache2 отдаёт файлы по http
+```
 vagrant@pxeser:~$ curl -I http://10.0.0.20/srv/images/ubuntu-24.04.4-live-server-amd64.iso
 HTTP/1.1 200 OK
 Date: Sat, 26 Sep 2026 16:29:38 GMT
@@ -251,7 +260,8 @@ ETag: "cafb5800-65c64f4882851"
 Accept-Ranges: bytes
 Content-Length: 3405469696
 Content-Type: application/x-iso9660-image
-
+```
+```
 vagrant@pxeser:~$ curl -I http://10.0.0.20/srv/ks/user-data
 HTTP/1.1 200 OK
 Date: Sat, 26 Sep 2026 16:29:44 GMT
@@ -260,8 +270,9 @@ Last-Modified: Sat, 26 Sep 2026 15:51:28 GMT
 ETag: "213-65c64ce5b4619"
 Accept-Ranges: bytes
 Content-Length: 531
-
+```
 # проверка логов журнала apache2
+```
 vagrant@pxeser:~$ sudo tail -20 /var/log/apache2/other_vhosts_access.log
 pxeser:80 10.0.0.118 - - [26/Sep/2026:16:15:50 +0000] "GET /srv/images/ubuntu-24.04.4-live-server-amd64.iso HTTP/1.1" 200 3405469974 "-" "Wget"
 pxeser:80 10.0.0.118 - - [26/Sep/2026:16:16:44 +0000] "GET /srv/ks/meta-data HTTP/1.1" 200 256 "-" "Cloud-Init/25.2-0ubuntu1~24.04.1"
@@ -279,8 +290,9 @@ pxeser:80 10.0.0.118 - - [26/Sep/2026:16:16:53 +0000] "GET /srv/ks/vendor-data H
 pxeser:80 10.0.0.118 - - [26/Sep/2026:16:16:54 +0000] "GET /srv/ks/vendor-data HTTP/1.1" 404 487 "-" "Cloud-Init/25.2-0ubuntu1~24.04.1"
 pxeser:80 10.0.0.20 - - [26/Sep/2026:16:29:38 +0000] "HEAD /srv/images/ubuntu-24.04.4-live-server-amd64.iso HTTP/1.1" 200 259 "-" "curl/7.81.0"
 pxeser:80 10.0.0.20 - - [26/Sep/2026:16:29:44 +0000] "HEAD /srv/ks/user-data HTTP/1.1" 200 204 "-" "curl/7.81.0"
-
+```
 # проверка что dhcp и tftp работают
+```
 vagrant@pxeser:~$ sudo journalctl -u dnsmasq --since "30 minutes ago"
 Sep 26 16:02:11 pxeser systemd[1]: Starting dnsmasq - A lightweight DHCP an>
 Sep 26 16:02:11 pxeser dnsmasq[4180]: started, version 2.91 DNS disabled
@@ -352,3 +364,4 @@ Sep 26 16:24:07 pxeser dnsmasq-dhcp[4180]: DHCPDISCOVER(enp0s8) 02:44:a4:14>
 Sep 26 16:24:07 pxeser dnsmasq-dhcp[4180]: DHCPOFFER(enp0s8) 10.0.0.110 02:>
 Sep 26 16:24:07 pxeser dnsmasq-dhcp[4180]: DHCPREQUEST(enp0s8) 10.0.0.110 0>
 Sep 26 16:24:07 pxeser dnsmasq-dhcp[4180]: DHCPACK(enp0s8) 10.0.0.110 02:44>
+```
