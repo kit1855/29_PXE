@@ -25,7 +25,7 @@ C:\Users\Lenovo>icacls "D:\linux\Professional\29 DHCP, PXE\dz14\.vagrant\machine
 
 8. проверки:
 
-# подключение из ВМ pxeser по ssh к ВМ pxecli
+## подключение из ВМ pxeser по ssh к ВМ pxecli
 ```
 vagrant@pxeser:~$ ssh otus@10.0.0.110
 The authenticity of host '10.0.0.110 (10.0.0.110)' can't be established.
@@ -61,7 +61,7 @@ Failed to connect to https://changelogs.ubuntu.com/meta-release-lts. Check your 
 To run a command as administrator (user "root"), use "sudo <command>".
 See "man sudo_root" for details.
 ```
-# проверки ВМ pxecli
+### проверки ВМ pxecli
 ```
 otus@ubuntu-pxe:~$ hostname
 ubuntu-pxe
