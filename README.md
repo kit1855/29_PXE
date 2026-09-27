@@ -21,7 +21,7 @@ C:\Users\Lenovo>icacls "D:\linux\Professional\29 DHCP, PXE\dz14\.vagrant\machine
 обработанный файл: D:\linux\Professional\29 DHCP, PXE\dz14\.vagrant\machines\pxeser\virtualbox\private_key
 Успешно обработано 1 файлов; не удалось обработать 0 файлов
 ```
-7. подключиться к ВМ pxeser, зайти по ssh на ВМ pxecli и сделать все проверки.
+7. подключиться к ВМ pxeser, зайти по ssh на ВМ pxecli (запросит пароль - ввести 123) и сделать все проверки.
 
 8. проверки:
 
