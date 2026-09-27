@@ -1,7 +1,7 @@
 # -*- mode: ruby -*-
 # vim: set ft=ruby :
 
-# Указываем зеркало для скачивания образов
+# зеркало для скачивания образов
 ENV['VAGRANT_SERVER_URL'] = 'https://vagrant.elab.pro'
 
 Vagrant.configure("2") do |config|
@@ -37,12 +37,13 @@ Vagrant.configure("2") do |config|
         sudo ufw allow 67/udp       # открываю порт для DHCP сервера
         sudo ufw allow 69/udp       # открываю порт для TFTP
         sudo ufw allow 80/tcp       # открываю порт для apache2
-        sudo ufw --force enable
+        sudo ufw --force enable     # включаю фаервол
         sudo apt update
         sudo apt install -y dnsmasq apache2 syslinux pxelinux
 
-sudo mkdir -p /srv/ks
-sudo tee /etc/apache2/sites-available/ks-server.conf > /dev/null <<'EOF'
+        # конфиг apache2
+        sudo mkdir -p /srv/ks
+        sudo tee /etc/apache2/sites-available/ks-server.conf > /dev/null <<'EOF'
 <VirtualHost 10.0.0.20:80>
     DocumentRoot /
     <Directory /srv/images>
@@ -57,10 +58,12 @@ sudo tee /etc/apache2/sites-available/ks-server.conf > /dev/null <<'EOF'
     </Directory>
 </VirtualHost>
 EOF
-sudo a2ensite ks-server.conf
-sudo systemctl reload apache2
+        # создание симлинка конфига и перезагрузка сервиса apache2
+        sudo a2ensite ks-server.conf
+        sudo systemctl reload apache2
 
-sudo tee /srv/ks/user-data > /dev/null <<'EOF'
+        # создание конфига автоматической установки Ubuntu
+        sudo tee /srv/ks/user-data > /dev/null <<'EOF'
 #cloud-config
 autoinstall:
   version: 1
@@ -87,9 +90,9 @@ autoinstall:
     allow-pw: true
   updates: security
 EOF
-sudo touch /srv/ks/meta-data
+        sudo touch /srv/ks/meta-data # создание пустого, но обязательного файла для cloud-init
 
-
+        # конфиг dnsmasq
         sudo tee /etc/dnsmasq.d/pxe.conf > /dev/null <<'EOF'
 interface=enp0s8
 bind-interfaces
