@@ -103,7 +103,7 @@ enable-tftp
 tftp-root=/srv/tftp/amd64
 EOF
 
-
+    # копирование из проброшенной папки с образом в директорию на диске ВМ pxeser
     echo "=== Начинаю копирование ISO (3.17 ГБ). Это может занять 1-3 минуты ==="
     # Копируем ISO, если его ещё нет
     if [ ! -f /srv/images/ubuntu-24.04.4-live-server-amd64.iso ]; then
@@ -114,17 +114,19 @@ EOF
       echo "=== ISO уже на месте, копирование не требуется ==="
     fi 
 
+    # создание директории, копирование в неё pxe-загрузчика и модуля для pxe-загрузчика 
     sudo mkdir -p /srv/tftp/amd64
     sudo cp /usr/lib/PXELINUX/pxelinux.0 /srv/tftp/amd64/
     sudo cp /usr/lib/syslinux/modules/bios/ldlinux.c32 /srv/tftp/amd64/
 
+    # монтирование образа операционной системы, копирование из него в tftp ядра linux (с переименованием) и initrd, отмонтирование
     sudo mkdir -p /mnt/iso
     sudo mount -o loop /srv/images/ubuntu-24.04.4-live-server-amd64.iso /mnt/iso
     sudo cp /mnt/iso/casper/vmlinuz /srv/tftp/amd64/linux
     sudo cp /mnt/iso/casper/initrd /srv/tftp/amd64/initrd
     sudo umount /mnt/iso
 
-
+    # конфиг загрузчика pxelinux
     sudo mkdir -p /srv/tftp/amd64/pxelinux.cfg
     sudo tee /srv/tftp/amd64/pxelinux.cfg/default > /dev/null <<'EOF'
 DEFAULT install
@@ -133,6 +135,9 @@ LABEL install
     INITRD initrd
     APPEND root=/dev/ram0 ramdisk_size=8388608 ip=dhcp url=http://10.0.0.20/srv/images/ubuntu-24.04.4-live-server-amd64.iso autoinstall cloud-config-url=/dev/null ds=nocloud-net;s=http://10.0.0.20/srv/ks/
 EOF
+
+      # перезапуск сервисов, чтоб они перечитали новые конфиги
+      # повторный перезапуск apache2 лишний, но на всякий случай решил оставить. К тому же решил не тратить время на один доплонительный запуск стенда, ради проверки работоспособности стенда без повторного перезапуска сервиса apache2
       sudo systemctl restart dnsmasq
       sudo systemctl restart apache2
       SHELL
