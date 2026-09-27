@@ -61,7 +61,7 @@ Failed to connect to https://changelogs.ubuntu.com/meta-release-lts. Check your 
 To run a command as administrator (user "root"), use "sudo <command>".
 See "man sudo_root" for details.
 ```
-### проверки ВМ pxecli
+## проверки ВМ pxecli
 ```
 otus@ubuntu-pxe:~$ hostname
 ubuntu-pxe
@@ -128,8 +128,8 @@ otus@ubuntu-pxe:~$ exit
 logout
 Connection to 10.0.0.110 closed.
 ```
-# проверки на VM pxeser
-# статус dnsmasq
+## проверки на VM pxeser
+## статус dnsmasq
 ```
 vagrant@pxeser:~$ sudo systemctl status dnsmasq
 ● dnsmasq.service - dnsmasq - A lightweight DHCP and caching DNS server
@@ -156,7 +156,7 @@ Sep 26 16:24:07 pxeser dnsmasq-dhcp[4180]: DHCPOFFER(enp0s8) 10.0.0.110 02:>
 Sep 26 16:24:07 pxeser dnsmasq-dhcp[4180]: DHCPREQUEST(enp0s8) 10.0.0.110 0>
 Sep 26 16:24:07 pxeser dnsmasq-dhcp[4180]: DHCPACK(enp0s8) 10.0.0.110 02:44>
 ```
-# порты, которые слушают ndsmasq и tftp
+## порты, которые слушают ndsmasq и tftp
 ```
 vagrant@pxeser:~$ sudo ss -tunlp | grep -E ":67|:69"
 udp   UNCONN 0      0                         0.0.0.0%enp0s8:67        0.0.0.0:*    users:(("dnsmasq",pid=4180,fd=4))
@@ -165,7 +165,7 @@ udp   UNCONN 0      0                              10.0.0.20:69        0.0.0.0:*
 udp   UNCONN 0      0                                  [::1]:69           [::]:*    users:(("dnsmasq",pid=4180,fd=9))
 udp   UNCONN 0      0      [fe80::a00:27ff:fe7c:4378]%enp0s8:69           [::]:*    users:(("dnsmasq",pid=4180,fd=8))
 ```
-# статус apache2
+## статус apache2
 ```
 vagrant@pxeser:~$ sudo systemctl status apache2
 ● apache2.service - The Apache HTTP Server
@@ -186,7 +186,7 @@ Sep 26 16:02:12 pxeser systemd[1]: Starting The Apache HTTP Server...
 Sep 26 16:02:12 pxeser apachectl[4201]: AH00558: apache2: Could not reliabl>
 Sep 26 16:02:12 pxeser systemd[1]: Started The Apache HTTP Server.
 ```
-# наличие образа
+## наличие образа
 ```
 vagrant@pxeser:~$ ls -la /srv/images/
 total 3325668
@@ -194,7 +194,7 @@ drwxr-xr-x 2 root root       4096 Sep 26 15:51 .
 drwxr-xr-x 5 root root       4096 Sep 26 16:02 ..
 -rwxr-xr-x 1 root root 3405469696 Sep 26 16:02 ubuntu-24.04.4-live-server-amd64.iso
 ```
-# нетбут файлы
+## нетбут файлы
 ```
 vagrant@pxeser:~$ ls -la /srv/tftp/amd64/
 total 89532
@@ -206,7 +206,7 @@ drwxr-xr-x 3 root root     4096 Sep 26 16:02 ..
 -rw-r--r-- 1 root root    42584 Sep 26 16:02 pxelinux.0
 drwxr-xr-x 2 root root     4096 Sep 26 16:02 pxelinux.cfg
 ```
-# конфиг загрузчика pxelinux
+## конфиг загрузчика pxelinux
 ```
 vagrant@pxeser:~$ cat /srv/tftp/amd64/pxelinux.cfg/default
 DEFAULT install
@@ -215,7 +215,7 @@ LABEL install
     INITRD initrd
     APPEND root=/dev/ram0 ramdisk_size=8388608 ip=dhcp url=http://10.0.0.20/srv/images/ubuntu-24.04.4-live-server-amd64.iso autoinstall cloud-config-url=/dev/null ds=nocloud-net;s=http://10.0.0.20/srv/ks/
 ```
-# файл автоустановки с логином, паролем, хостнэйм, сетью и ssh
+## файл автоустановки с логином, паролем, хостнэйм, сетью и ssh
 ```
 vagrant@pxeser:~$ cat /srv/ks/user-data
 #cloud-config
@@ -244,11 +244,11 @@ autoinstall:
     allow-pw: true
   updates: security
 ```
-# проверка наличия обязательного файла для cloud-init. Он пустой, но без него возможны проблемы.
+## проверка наличия обязательного файла для cloud-init. Он пустой, но без него возможны проблемы.
 ```
 vagrant@pxeser:~$ cat /srv/ks/meta-data
 ```
-# проверка, что можно apache2 отдаёт файлы по http
+## проверка, что можно apache2 отдаёт файлы по http
 ```
 vagrant@pxeser:~$ curl -I http://10.0.0.20/srv/images/ubuntu-24.04.4-live-server-amd64.iso
 HTTP/1.1 200 OK
@@ -270,7 +270,7 @@ ETag: "213-65c64ce5b4619"
 Accept-Ranges: bytes
 Content-Length: 531
 ```
-# проверка логов журнала apache2
+## проверка логов в журнале apache2
 ```
 vagrant@pxeser:~$ sudo tail -20 /var/log/apache2/other_vhosts_access.log
 pxeser:80 10.0.0.118 - - [26/Sep/2026:16:15:50 +0000] "GET /srv/images/ubuntu-24.04.4-live-server-amd64.iso HTTP/1.1" 200 3405469974 "-" "Wget"
@@ -290,7 +290,7 @@ pxeser:80 10.0.0.118 - - [26/Sep/2026:16:16:54 +0000] "GET /srv/ks/vendor-data H
 pxeser:80 10.0.0.20 - - [26/Sep/2026:16:29:38 +0000] "HEAD /srv/images/ubuntu-24.04.4-live-server-amd64.iso HTTP/1.1" 200 259 "-" "curl/7.81.0"
 pxeser:80 10.0.0.20 - - [26/Sep/2026:16:29:44 +0000] "HEAD /srv/ks/user-data HTTP/1.1" 200 204 "-" "curl/7.81.0"
 ```
-# проверка что dhcp и tftp работают
+## проверка что dhcp и tftp работают
 ```
 vagrant@pxeser:~$ sudo journalctl -u dnsmasq --since "30 minutes ago"
 Sep 26 16:02:11 pxeser systemd[1]: Starting dnsmasq - A lightweight DHCP an>
